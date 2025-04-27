@@ -19,7 +19,6 @@ get_mysql_root_password() {
 }
 
 get_link_git() {
-  
   print_banner
   
   default_link="https://github.com/MinoruMX/Chasap.git"
@@ -27,8 +26,13 @@ get_link_git() {
   printf "  Presiona Enter para usar el valor por defecto:\n\n"
   printf "  ${default_link}\n\n"
   read -p "> " link_git
-  # Si el usuario no escribe nada, se usa el valor por defecto
   link_git="${link_git:-$default_link}"
+
+  # Si el enlace contiene ':' y '@', pedir el chasap_id
+  if [[ "$link_git" == *":"* && "$link_git" == *"@"* ]]; then
+    printf "\n${WHITE} 🔐 El enlace requiere autenticación.${GRAY_LIGHT}\n"
+    read -p "Ingresa el chasap_id: " CHASAP_ID
+  fi
 }
 
 get_instancia_add() {

@@ -52,7 +52,7 @@ backend_set_env() {
   frontend_url=${frontend_url%%/*}
   frontend_url=https://$frontend_url
 
-sudo su - deploy << EOF
+  sudo su - deploy << EOF
   cat <<[-]EOF > /home/deploy/${instancia_add}/backend/.env
 NODE_ENV=
 BACKEND_URL=${backend_url}
@@ -81,8 +81,11 @@ CLOSED_SEND_BY_ME=true
 MAIL_HOST="smtp.hostinger.com"
 MAIL_USER="contato@seusite.com"
 MAIL_PASS="senha"
-MAIL_FROM="Recuperar Senha <contato@seusite.com>"
+MAIL_FROM="Recuperar Contraseña <contato@seusite.com>"
 MAIL_PORT="465"
+
+# Si existe CHASAP_ID lo agregamos
+$( [ -n "$CHASAP_ID" ] && echo "chasap_id=${CHASAP_ID}" )
 
 [-]EOF
 EOF
