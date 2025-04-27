@@ -54,11 +54,13 @@ backend_set_env() {
 
   sudo su - deploy << EOF
   cat <<[-]EOF > /home/deploy/${instancia_add}/backend/.env
-NODE_ENV=
+NODE_ENV=production
 BACKEND_URL=${backend_url}
 FRONTEND_URL=${frontend_url}
 PROXY_PORT=443
 PORT=${backend_port}
+# CHASAP_ID 
+$( [ -n "$CHASAP_ID" ] && echo "CHASAP_ID=${CHASAP_ID}" )
 
 DB_DIALECT=postgres
 DB_HOST=localhost
@@ -83,9 +85,6 @@ MAIL_USER="contato@seusite.com"
 MAIL_PASS="senha"
 MAIL_FROM="Recuperar Contraseña <contato@seusite.com>"
 MAIL_PORT="465"
-
-# Si existe CHASAP_ID lo agregamos
-$( [ -n "$CHASAP_ID" ] && echo "chasap_id=${CHASAP_ID}" )
 
 [-]EOF
 EOF
