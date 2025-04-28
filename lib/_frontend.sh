@@ -43,6 +43,26 @@ EOF
 }
 
 #######################################
+# SPINNER
+# Muestra un spinner mientras se ejecuta un proceso en segundo plano
+#
+#######################################
+show_spinner() {
+  local pid=$1
+  local delay=0.1
+  local spinstr='|/-\'
+  while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
+    local temp=${spinstr#?}
+    printf " [%c]  " "$spinstr"
+    local spinstr=$temp${spinstr%"$temp"}
+    sleep $delay
+    printf "\b\b\b\b\b\b"
+  done
+  printf "    \b\b\b\b"
+}
+
+
+#######################################
 # Actualiza el código del frontend
 # Argumentos:
 #   Ninguno
@@ -72,9 +92,12 @@ frontend_update() {
   # Solo si hay cambios
   cd /home/deploy/${empresa_atualizar}/frontend
   npx update-browserslist-db@latest
-  npm install --loglevel=error
+  npm install --loglevel=error & 
+  show_spinner $!
   rm -rf build
-  npm run build
+  npm run build & 
+  show_spinner $!
+
   pm2 start ${empresa_atualizar}-frontend
   pm2 save
 EOF

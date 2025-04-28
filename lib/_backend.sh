@@ -138,6 +138,7 @@ EOF
   sleep 2
 }
 
+
 #######################################
 # Actualiza el código del backend
 # Argumentos:
@@ -169,9 +170,11 @@ backend_update() {
   cd /home/deploy/${empresa_atualizar}/backend
   npm install --loglevel=error
   npm update -f
-  npm install @types/fs-extra --loglevel=error
+  npm install @types/fs-extra --loglevel=error & 
+  show_spinner $!
   rm -rf dist 
-  npm run build
+  npm run build & 
+  show_spinner $!
   npx sequelize db:migrate
   npx sequelize db:seed
   pm2 start ${empresa_atualizar}-backend
