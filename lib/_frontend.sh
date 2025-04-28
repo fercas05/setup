@@ -74,36 +74,43 @@ frontend_update() {
 
   sleep 2
 
-  sudo su - deploy <<EOF
   cd /home/deploy/${empresa_atualizar}
-  pm2 stop ${empresa_atualizar}-frontend
+  
+  echo "🚫 Deteniendo PM2..."
+  sudo -u deploy pm2 stop ${empresa_atualizar}-frontend
 
-  PULL_OUTPUT=\$(git pull)
+  echo "🔄 Haciendo git pull..."
+  PULL_OUTPUT=$(sudo -u deploy git pull)
+  echo "$PULL_OUTPUT"
 
-  echo "\$PULL_OUTPUT"
-
-  if echo "\$PULL_OUTPUT" | grep -q "Already up to date."; then
+  if echo "$PULL_OUTPUT" | grep -q "Already up to date."; then
     echo "✅ No hay cambios para actualizar. Saliendo..."
-    pm2 start ${empresa_atualizar}-frontend
-    pm2 save
-    exit 0
+    sudo -u deploy pm2 start ${empresa_atualizar}-frontend
+    sudo -u deploy pm2 save
+    return 0
   fi
 
-  # Solo si hay cambios
+  echo "🚀 Instalando dependencias..."
   cd /home/deploy/${empresa_atualizar}/frontend
-  npx update-browserslist-db@latest
-  npm install --loglevel=error & 
-  show_spinner $!
-  rm -rf build
-  npm run build & 
+  sudo -u deploy npx update-browserslist-db@latest
+  
+  sudo -u deploy npm install --loglevel=error & 
   show_spinner $!
 
-  pm2 start ${empresa_atualizar}-frontend
-  pm2 save
-EOF
+  echo "🧹 Limpiando build anterior..."
+  sudo -u deploy rm -rf build
+
+  echo "🏗️  Construyendo nueva versión..."
+  sudo -u deploy npm run build & 
+  show_spinner $!
+
+  echo "▶️ Iniciando PM2..."
+  sudo -u deploy pm2 start ${empresa_atualizar}-frontend
+  sudo -u deploy pm2 save
 
   sleep 2
 }
+
 
 #######################################
 # Configura las variables de entorno del frontend
