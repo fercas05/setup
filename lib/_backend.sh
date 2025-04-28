@@ -151,35 +151,53 @@ backend_update() {
 
   sleep 2
 
-  sudo su - deploy <<EOF
   cd /home/deploy/${empresa_atualizar}
-  pm2 stop ${empresa_atualizar}-backend
 
-  PULL_OUTPUT=\$(git pull)
+  echo "🚫 Deteniendo PM2..."
+  sudo -u deploy pm2 stop ${empresa_atualizar}-backend
 
-  echo "\$PULL_OUTPUT"
+  echo "🔄 Haciendo git pull..."
+  PULL_OUTPUT=$(sudo -u deploy git pull)
+  echo "$PULL_OUTPUT"
 
-  if echo "\$PULL_OUTPUT" | grep -q "Already up to date."; then
+  if echo "$PULL_OUTPUT" | grep -q "Already up to date."; then
     echo "✅ No hay cambios para actualizar. Saliendo..."
-    pm2 start ${empresa_atualizar}-backend
-    pm2 save
-    exit 0
+    sudo -u deploy pm2 start ${empresa_atualizar}-backend
+    sudo -u deploy pm2 save
+    return 0
   fi
 
-  # Solo si hay cambios
+  echo "📂 Moviéndose a backend..."
   cd /home/deploy/${empresa_atualizar}/backend
-  npm install --loglevel=error
-  npm update -f
-  npm install @types/fs-extra --loglevel=error & 
+
+  echo "📦 Instalando dependencias..."
+  sudo -u deploy npm install --loglevel=error & 
   show_spinner $!
-  rm -rf dist 
-  npm run build & 
+
+  echo "⬆️  Actualizando paquetes forzadamente..."
+  sudo -u deploy npm update -f & 
   show_spinner $!
-  npx sequelize db:migrate
-  npx sequelize db:seed
-  pm2 start ${empresa_atualizar}-backend
-  pm2 save 
-EOF
+
+  echo "📥 Instalando tipos de fs-extra..."
+  sudo -u deploy npm install @types/fs-extra --loglevel=error & 
+  show_spinner $!
+
+  echo "🧹 Limpiando carpeta dist..."
+  sudo -u deploy rm -rf dist
+
+  echo "🏗️  Compilando proyecto (build)..."
+  sudo -u deploy npm run build & 
+  show_spinner $!
+
+  echo "🛢️ Migrando base de datos..."
+  sudo -u deploy npx sequelize db:migrate
+
+  echo "🌱 Insertando datos semilla..."
+  sudo -u deploy npx sequelize db:seed
+
+  echo "▶️ Iniciando PM2..."
+  sudo -u deploy pm2 start ${empresa_atualizar}-backend
+  sudo -u deploy pm2 save
 
   sleep 2
 }
