@@ -57,8 +57,21 @@ frontend_update() {
   sudo su - deploy <<EOF
   cd /home/deploy/${empresa_atualizar}
   pm2 stop ${empresa_atualizar}-frontend
-  git pull
+
+  PULL_OUTPUT=\$(git pull)
+
+  echo "\$PULL_OUTPUT"
+
+  if echo "\$PULL_OUTPUT" | grep -q "Already up to date."; then
+    echo "✅ No hay cambios para actualizar. Saliendo..."
+    pm2 start ${empresa_atualizar}-frontend
+    pm2 save
+    exit 0
+  fi
+
+  # Solo si hay cambios
   cd /home/deploy/${empresa_atualizar}/frontend
+  npx update-browserslist-db@latest
   npm install --loglevel=error
   rm -rf build
   npm run build
