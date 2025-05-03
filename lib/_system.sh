@@ -544,8 +544,7 @@ backend_logs() {
   printf "\n\n"
 
   sleep 2
-
-  pm2 logs $(echo "$instancia_add")-backend
+  sudo -u deploy pm2 logs $(echo "$instancia_add")-backend
 
   sleep 2
 }
@@ -556,8 +555,7 @@ frontend_logs() {
   printf "\n\n"
 
   sleep 2
-
-  pm2 logs $(echo "$instancia_add")-frontend
+  sudo -u deploy pm2 logs $(echo "$instancia_add")-frontend
 
   sleep 2
 }
