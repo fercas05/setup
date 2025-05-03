@@ -32,13 +32,13 @@ frontend_node_build() {
   printf "${WHITE} 💻 Compilando el código del frontend...${GRAY_LIGHT}"
   printf "\n\n"
 
-  sleep 2 &
-  show_spinner $!
+  sleep 2
+  printf "${WHITE} 💻 EL PROCESO PUEDE TARDAR BASTANTE. PACIENCIA"
   sudo su - deploy <<EOF
   cd /home/deploy/${instancia_add}/frontend
   npm run build
 EOF
-  & show_spinner $!
+
   sleep 2
 }
 
