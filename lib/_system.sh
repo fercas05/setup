@@ -564,30 +564,38 @@ frontend_logs() {
 
 build_ambos() {
   print_banner
-  printf "${WHITE} 💻 BUILD AMBOS...${GRAY_LIGHT}"
-  printf "\n\n"
+  printf "${WHITE} 💻 INICIANDO BUILD DE FRONTEND Y BACKEND...${GRAY_LIGHT}\n\n"
+  sleep 1
 
-  sleep 2
+  printf "${WHITE} ⏳ ESTE PROCESO PUEDE TARDAR UN POCO, POR FAVOR ESPERA...\n\n"
 
-  printf "${WHITE} 💻 EL PROCESO PUEDE TARDAR BASTANTE. PACIENCIA"
+  FRONT_PATH="/home/deploy/${instancia_add}/frontend"
+  BACK_PATH="/home/deploy/${instancia_add}/backend"
 
-  cd /home/deploy/$(echo "$instancia_add")/frontend
+  ## -------- FRONTEND -------- ##
+  echo -e "\n🔧 Frontend:"
+  cd "$FRONT_PATH" || { echo "❌ No se pudo acceder al frontend en $FRONT_PATH"; return 1; }
+
   echo "🧹 Limpiando build anterior..."
   sudo -u deploy rm -rf build & 
   show_spinner $!
 
-  echo "🏗️  Construyendo nueva versión..."
+  echo "🏗️  Construyendo nueva versión del frontend..."
   sudo -u deploy npm run build & 
   show_spinner $!
+  
+  ## -------- BACKEND -------- ##
+  echo -e "\n🔧 Backend:"
+  cd "$BACK_PATH" || { echo "❌ No se pudo acceder al backend en $BACK_PATH"; return 1; }
 
-  cd /home/deploy/$(echo "$instancia_add")/backend
   echo "🧹 Limpiando build anterior..."
   sudo -u deploy rm -rf build & 
   show_spinner $!
 
-  echo "🏗️  Construyendo nueva versión..."
+  echo "🏗️  Construyendo nueva versión del backend..."
   sudo -u deploy npm run build & 
   show_spinner $!
 
+  echo -e "\n✅ ${WHITE}BUILD COMPLETO${GRAY_LIGHT}\n"
   sleep 2
 }
