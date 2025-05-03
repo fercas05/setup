@@ -245,6 +245,11 @@ software_logs_frontend() {
   frontend_logs
 }
 
+software_build_ambos() {
+  get_instancia_add
+  build_ambos
+}
+
 inquiry_options() {
   
   print_banner
@@ -259,6 +264,7 @@ inquiry_options() {
   printf "   [6] Reinstalar Certificado Certbot\n"
   printf "   [7] Revisar Logs Backend\n"
   printf "   [8] Revisar Logs Frontend\n"
+  printf "   [9] Fix - Rebuilder Front y Back\n"
   printf "\n"
   read -p "> " option
 
@@ -297,7 +303,11 @@ inquiry_options() {
     8) 
       software_logs_frontend
       exit
-      ;;      
+      ;;   
+    9) 
+      software_build_ambos
+      exit
+      ;;         
     *) exit ;;
   esac
 }

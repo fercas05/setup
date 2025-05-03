@@ -561,3 +561,33 @@ frontend_logs() {
 
   sleep 2
 }
+
+build_ambos() {
+  print_banner
+  printf "${WHITE} 💻 BUILD AMBOS...${GRAY_LIGHT}"
+  printf "\n\n"
+
+  sleep 2
+
+  printf "${WHITE} 💻 EL PROCESO PUEDE TARDAR BASTANTE. PACIENCIA"
+
+  cd /home/deploy/$(echo "$instancia_add")/frontend
+  echo "🧹 Limpiando build anterior..."
+  sudo -u deploy rm -rf build & 
+  show_spinner $!
+
+  echo "🏗️  Construyendo nueva versión..."
+  sudo -u deploy npm run build & 
+  show_spinner $!
+
+  cd /home/deploy/$(echo "$instancia_add")/backend
+  echo "🧹 Limpiando build anterior..."
+  sudo -u deploy rm -rf build & 
+  show_spinner $!
+
+  echo "🏗️  Construyendo nueva versión..."
+  sudo -u deploy npm run build & 
+  show_spinner $!
+
+  sleep 2
+}
