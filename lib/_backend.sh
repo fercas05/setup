@@ -302,5 +302,6 @@ END
 ln -s /etc/nginx/sites-available/${instancia_add}-backend /etc/nginx/sites-enabled
 EOF
 
+  echo -e "\n✅ ${WHITE}INSTALACIÓN COMPLETADA${GRAY_LIGHT}\n"
   sleep 2
 }
