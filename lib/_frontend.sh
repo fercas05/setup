@@ -34,10 +34,15 @@ frontend_node_build() {
 
   sleep 2
   printf "${WHITE} 💻 EL PROCESO PUEDE TARDAR BASTANTE. PACIENCIA"
-  sudo su - deploy <<EOF
-  cd /home/deploy/${instancia_add}/frontend
-  npm run build
-EOF
+
+  cd /home/deploy/${empresa_atualizar}/frontend
+  echo "🧹 Limpiando build anterior..."
+  sudo -u deploy rm -rf build & 
+  show_spinner $!
+
+  echo "🏗️  Construyendo nueva versión..."
+  sudo -u deploy npm run build & 
+  show_spinner $!
 
   sleep 2
 }
