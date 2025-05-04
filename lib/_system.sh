@@ -13,12 +13,11 @@ system_create_user() {
 
   sleep 2
 
-  # Crear usuario 'deploy' sin contraseña de login interactiva, pero con acceso sudo
-  sudo adduser --disabled-password --gecos "" deploy
-  echo "deploy:${mysql_root_password}" | sudo chpasswd
-
-  # Añadir al grupo sudo
-  sudo usermod -aG sudo deploy
+   sudo adduser --disabled-password --gecos "" deploy && echo "deploy:${mysql_root_password}" | sudo chpasswd
+  sudo su - root <<EOF
+  useradd -m -p $(openssl passwd -crypt ${mysql_root_password}) -s /bin/bash -G sudo deploy
+  usermod -aG sudo deploy
+EOF
 
   sleep 2
 }
