@@ -35,12 +35,17 @@ frontend_node_build() {
   sleep 2
   printf "${WHITE} 💻 EL PROCESO PUEDE TARDAR BASTANTE. PACIENCIA"
 
-  cd /home/deploy/${empresa_atualizar}/frontend
+  FRONT_PATH="/home/deploy/${instancia_add}/frontend"
+  
+  ## -------- FRONTEND -------- ##
+  echo -e "\n🔧 Frontend:"
+  cd "$FRONT_PATH" || { echo "❌ No se pudo acceder al frontend en $FRONT_PATH"; return 1; }
+
   echo "🧹 Limpiando build anterior..."
   sudo -u deploy rm -rf build & 
   show_spinner $!
 
-  echo "🏗️  Construyendo nueva versión..."
+  echo "🏗️  Construyendo nueva versión del frontend..."
   sudo -u deploy npm run build & 
   show_spinner $!
 
