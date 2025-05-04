@@ -9,18 +9,20 @@
 #######################################
 system_create_user() {
   print_banner
-  printf "${WHITE} 💻 Ahora vamos a crear el usuario para la instancia...${GRAY_LIGHT}"
-  printf "\n\n"
+  printf "${WHITE} 💻 Ahora vamos a crear el usuario para la instancia...${GRAY_LIGHT}\n\n"
 
   sleep 2
-  sudo adduser --disabled-password --gecos "" deploy && echo "deploy:${mysql_root_password}" | sudo chpasswd
-  sudo su - root <<EOF
-  useradd -m -p $(openssl passwd -crypt ${mysql_root_password}) -s /bin/bash -G sudo deploy
-  usermod -aG sudo deploy
-EOF
+
+  # Crear usuario 'deploy' sin contraseña de login interactiva, pero con acceso sudo
+  sudo adduser --disabled-password --gecos "" deploy
+  echo "deploy:${mysql_root_password}" | sudo chpasswd
+
+  # Añadir al grupo sudo
+  sudo usermod -aG sudo deploy
 
   sleep 2
 }
+
 
 #######################################
 # Clona los repositorios usando git
