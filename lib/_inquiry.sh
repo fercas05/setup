@@ -203,7 +203,6 @@ software_update() {
   get_empresa_atualizar
   frontend_update
   backend_update
-  reboot
 }
 
 software_delete() {
