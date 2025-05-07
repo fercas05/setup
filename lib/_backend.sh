@@ -305,3 +305,8 @@ EOF
   echo -e "\n✅ ${WHITE}INSTALACIÓN COMPLETADA${GRAY_LIGHT}\n"
   sleep 2
 }
+
+reboot() {
+  echo -e "\n✅ ${WHITE}REINICIANDO SERVER{GRAY_LIGHT}\n"
+  sudo reboot
+}
