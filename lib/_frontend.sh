@@ -89,6 +89,9 @@ frontend_update() {
   echo "🚫 Deteniendo PM2..."
   sudo -u deploy pm2 stop ${empresa_atualizar}-frontend
 
+  echo "🧹 Restaurando archivos versionados en build si existen..."
+  sudo -u deploy git restore --staged --worktree frontend/build || true
+
   echo "🔄 Haciendo git pull..."
   PULL_OUTPUT=$(sudo -u deploy git pull)
   echo "$PULL_OUTPUT"
