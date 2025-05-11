@@ -561,6 +561,18 @@ frontend_logs() {
   sleep 2
 }
 
+backend_migrate() {
+  print_banner
+  printf "${WHITE} 💻 FIX MIGRACIONES...${GRAY_LIGHT}"
+  printf "\n\n"
+
+  sleep 2
+  cd /home/deploy/$(echo "$instancia_add")/backend
+  sudo -u deploy npx sequelize db:migrate
+  npx sequelize db:seed:all
+  sleep 2
+}
+
 build_ambos() {
   print_banner
   printf "${WHITE} 💻 INICIANDO BUILD DE FRONTEND Y BACKEND...${GRAY_LIGHT}\n\n"

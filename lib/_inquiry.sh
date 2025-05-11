@@ -250,64 +250,74 @@ software_build_ambos() {
   build_ambos
 }
 
+software_backend_migrate() {
+  get_instancia_add
+  backend_migrate
+}
+
 inquiry_options() {
   
   print_banner
   printf "${WHITE} 💻 Bienvenido(a) al Administrador de Chasap, ¡Selecciona la siguiente acción!${GRAY_LIGHT}"
   printf "\n\n"
-  printf "   [0] Instalar Chasap\n"
-  printf "   [1] Actualizar Chasap\n"
-  printf "   [2] Eliminar Chasap\n"
-  printf "   [3] Bloquear Chasap\n"
-  printf "   [4] Desbloquear Chasap\n"
-  printf "   [5] Cambiar dominio Chasap\n"
-  printf "   [6] Reinstalar Certificado Certbot\n"
-  printf "   [7] Revisar Logs Backend\n"
-  printf "   [8] Revisar Logs Frontend\n"
-  printf "   [9] Fix - Rebuilder Front y Back\n"
+  printf "   [1] Instalar Chasap\n"
+  printf "   [2] Actualizar Chasap\n"
+  printf "   [3] Eliminar Chasap\n"
+  printf "   [4] Bloquear Chasap\n"
+  printf "   [5] Desbloquear Chasap\n"
+  printf "   [6] Cambiar dominio Chasap\n"
+  printf "   [7] Reinstalar Certificado Certbot\n"
+  printf "   [8] Revisar Logs Backend\n"
+  printf "   [9] Revisar Logs Frontend\n"
+  printf "   [10] Fix - Rebuilder Front y Back\n"
+  printf "   [11] Fix - Backend DB Migrate\n"
   printf "\n"
   read -p "> " option
 
   case "${option}" in
-    0) get_urls ;;
+    1) get_urls ;;
     
-    1) 
+    2) 
       software_update 
       exit
       ;;
 
-    2) 
+    3) 
       software_delete 
       exit
       ;;
-    3) 
+    4) 
       software_bloquear 
       exit
       ;;
-    4) 
+    5) 
       software_desbloquear 
       exit
       ;;
-    5) 
+    6) 
       software_dominio 
       exit
       ;;        
-    6) 
+    7) 
       software_certbot
       exit
       ;;   
-    7) 
+    8) 
       software_logs_backend
       exit
       ;;   
-    8) 
+    9) 
       software_logs_frontend
       exit
       ;;   
-    9) 
+    10) 
       software_build_ambos
       exit
-      ;;         
+      ;;      
+    11) 
+      software_backend_migrate
+      exit
+      ;;    
     *) exit ;;
   esac
 }
