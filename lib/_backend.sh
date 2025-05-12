@@ -307,6 +307,6 @@ EOF
 }
 
 reboot() {
-  echo -e "\n✅ ${WHITE}REINICIANDO SERVER{GRAY_LIGHT}\n"
+  echo -e "\n✅ ${WHITE}REINICIANDO SERVER${GRAY_LIGHT}\n"
   sudo reboot
 }
