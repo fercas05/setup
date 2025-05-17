@@ -583,18 +583,23 @@ pm2_reinstall(){
   FRONT_PATH="/home/deploy/${instancia_add}/frontend"
   BACK_PATH="/home/deploy/${instancia_add}/backend"
 
+  ## Asegurar que PM2 esté instalado como deploy
+  echo -e "\n🔧 Verificando PM2 para el usuario deploy..."
+  sudo -u deploy bash -c 'command -v pm2 >/dev/null 2>&1 || npm install -g pm2'
+
   ## -------- FRONTEND -------- ##
   echo -e "\n🔧 Frontend:"
   cd "$FRONT_PATH" || { echo "❌ No se pudo acceder al frontend en $FRONT_PATH"; return 1; }
-  pm2 start server.js --name ${instancia_add}-frontend
-  pm2 save --force
+  sudo -u deploy pm2 start server.js --name "${instancia_add}-frontend"
+  sudo -u deploy pm2 save --force
 
   ## -------- BACKEND -------- ##
   echo -e "\n🔧 Backend:"
   cd "$BACK_PATH" || { echo "❌ No se pudo acceder al backend en $BACK_PATH"; return 1; }
-  pm2 start dist/server.js --node-args="--experimental-global-webcrypto" --name ${instancia_add}-backend
-  pm2 save --force
-  echo -e "\n✅ ${WHITE}PM2 COMPLETO${GRAY_LIGHT}\n"
+  sudo -u deploy pm2 start dist/server.js --node-args="--experimental-global-webcrypto" --name "${instancia_add}-backend"
+  sudo -u deploy pm2 save --force
+
+  echo -e "\n✅ ${WHITE}PM2 COMPLETO COMO DEPLOY${GRAY_LIGHT}\n"
   sleep 2
 }
 
