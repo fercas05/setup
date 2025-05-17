@@ -256,6 +256,11 @@ software_backend_migrate() {
   backend_migrate
 }
 
+software_pm2_install() {
+  get_instancia_add
+  backend_migrate
+}
+
 inquiry_options() {
   
   print_banner
@@ -272,6 +277,7 @@ inquiry_options() {
   printf "   [9] Revisar Logs Frontend\n"
   printf "   [10] Fix - Rebuilder Front y Back\n"
   printf "   [11] Fix - Backend DB Migrate\n"
+  printf "   [12] Fix - PM2 Services\n"
   printf "\n"
   read -p "> " option
 
@@ -318,7 +324,11 @@ inquiry_options() {
     11) 
       software_backend_migrate
       exit
-      ;;    
+      ;;
+    12) 
+      software_pm2_install
+      exit
+      ;;        
     *) exit ;;
   esac
 }

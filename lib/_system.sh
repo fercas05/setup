@@ -573,6 +573,31 @@ backend_migrate() {
   sleep 2
 }
 
+pm2_reinstall(){
+  print_banner
+  printf "${WHITE} 💻 INICIANDO FIX PM2 DE FRONTEND Y BACKEND...${GRAY_LIGHT}\n\n"
+  sleep 1
+
+  printf "${WHITE} ⏳ ESTE PROCESO PUEDE TARDAR UN POCO, POR FAVOR ESPERA...\n\n"
+
+  FRONT_PATH="/home/deploy/${instancia_add}/frontend"
+  BACK_PATH="/home/deploy/${instancia_add}/backend"
+
+  ## -------- FRONTEND -------- ##
+  echo -e "\n🔧 Frontend:"
+  cd "$FRONT_PATH" || { echo "❌ No se pudo acceder al frontend en $FRONT_PATH"; return 1; }
+  pm2 start server.js --name ${instancia_add}-frontend
+  pm2 save --force
+
+  ## -------- BACKEND -------- ##
+  echo -e "\n🔧 Backend:"
+  cd "$BACK_PATH" || { echo "❌ No se pudo acceder al backend en $BACK_PATH"; return 1; }
+  pm2 start dist/server.js --node-args="--experimental-global-webcrypto" --name ${instancia_add}-backend
+  pm2 save --force
+  echo -e "\n✅ ${WHITE}PM2 COMPLETO${GRAY_LIGHT}\n"
+  sleep 2
+}
+
 build_ambos() {
   print_banner
   printf "${WHITE} 💻 INICIANDO BUILD DE FRONTEND Y BACKEND...${GRAY_LIGHT}\n\n"
