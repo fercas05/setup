@@ -258,7 +258,7 @@ software_backend_migrate() {
 
 software_pm2_install() {
   get_instancia_add
-  backend_migrate
+  pm2_reinstall
 }
 
 inquiry_options() {
