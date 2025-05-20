@@ -171,23 +171,19 @@ backend_update() {
   cd /home/deploy/${empresa_atualizar}/backend
 
   echo "📦 Instalando dependencias..."
-  sudo -u deploy npm install --loglevel=error & 
-  show_spinner $!
+  sudo -u deploy npm install --loglevel=error
 
   echo "⬆️  Actualizando paquetes forzadamente..."
-  sudo -u deploy npm update -f & 
-  show_spinner $!
+  sudo -u deploy npm update -f 
 
   echo "📥 Instalando tipos de fs-extra..."
-  sudo -u deploy npm install @types/fs-extra --loglevel=error & 
-  show_spinner $!
+  sudo -u deploy npm install @types/fs-extra --loglevel=error
 
   echo "🧹 Limpiando carpeta dist..."
   sudo -u deploy rm -rf dist
 
   echo "🏗️  Compilando proyecto (build)..."
-  sudo -u deploy npm run build & 
-  show_spinner $!
+  sudo -u deploy npm run build
 
   echo "🛢️ Migrando base de datos..."
   sudo -u deploy npx sequelize db:migrate
