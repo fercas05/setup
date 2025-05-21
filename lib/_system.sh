@@ -640,6 +640,7 @@ build_ambos() {
   echo -e "\n✅ ${WHITE}BUILD COMPLETO${GRAY_LIGHT}\n"
   sleep 2
 }
+
 backend_build() {
   print_banner
   printf "${WHITE} 💻 BUILD BACKEND...${GRAY_LIGHT}"
@@ -656,6 +657,26 @@ backend_build() {
   sleep 2
   echo "🏗️  Construyendo nueva versión del backend..."
   sudo -u deploy npm run build 
+  sleep 2
+  echo -e "\n✅ ${WHITE}BUILD COMPLETO${GRAY_LIGHT}\n"
+}
+
+frontend_build() {
+  print_banner
+  printf "${WHITE} 💻 BUILD BACKEND...${GRAY_LIGHT}"
+  printf "\n\n"
+
+  sleep 2
+  FRONT_PATH="/home/deploy/${instancia_add}/frontend"
+
+  echo -e "\n🔧 Backend:"
+  cd "$FRONT_PATH" || { echo "❌ No se pudo acceder al backend en $BACK_PATH"; return 1; }
+
+  echo "🧹 Limpiando build anterior..."
+  sudo -u deploy rm -rf build
+  sleep 2
+  echo "🏗️  Construyendo nueva versión del backend..."
+  sudo -u deploy npm run build
   sleep 2
   echo -e "\n✅ ${WHITE}BUILD COMPLETO${GRAY_LIGHT}\n"
 }
