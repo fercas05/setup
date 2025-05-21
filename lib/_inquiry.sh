@@ -261,6 +261,18 @@ software_pm2_install() {
   pm2_reinstall
 }
 
+software_backend_build(){
+  get_instancia_add
+  backend_build
+  reboot
+}
+
+software_frontend_build(){
+  get_instancia_add
+  frontend_build
+  reboot
+}
+
 inquiry_options() {
   
   print_banner
@@ -328,7 +340,14 @@ inquiry_options() {
     12) 
       software_pm2_install
       exit
-      ;;        
+      ;;   
+    20) 
+      software_backend_build
+      exit
+    21) 
+      software_frontend_build
+      exit
+      ;;         
     *) exit ;;
   esac
 }
