@@ -344,6 +344,7 @@ inquiry_options() {
     20) 
       software_backend_build
       exit
+      ;;
     21) 
       software_frontend_build
       exit
