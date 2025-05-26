@@ -156,15 +156,24 @@ backend_update() {
   echo "🚫 Deteniendo PM2..."
   sudo -u deploy pm2 stop ${empresa_atualizar}-backend
 
-  echo "🔄 Haciendo git pull..."
-  PULL_OUTPUT=$(sudo -u deploy git pull)
-  echo "$PULL_OUTPUT"
+  echo "🔄 Haciendo git fetch..."
+  sudo -u deploy git fetch origin
 
-  if echo "$PULL_OUTPUT" | grep -q "Already up to date."; then
-    echo "✅ No hay cambios para actualizar. Saliendo..."
-    sudo -u deploy pm2 start ${empresa_atualizar}-backend
-    sudo -u deploy pm2 save
-    return 0
+  echo "🔍 Verificando cambios locales..."
+  if [ -n "$(sudo -u deploy git status --porcelain)" ]; then
+    echo "⚠️ Cambios locales detectados. Ejecutando reset forzado..."
+    sudo -u deploy git reset --hard origin/main
+  else
+    echo "✅ No hay cambios locales, ejecutando git pull..."
+    PULL_OUTPUT=$(sudo -u deploy git pull)
+    echo "$PULL_OUTPUT"
+
+    if echo "$PULL_OUTPUT" | grep -q "Already up to date."; then
+      echo "✅ No hay cambios para actualizar. Saliendo..."
+      sudo -u deploy pm2 start ${empresa_atualizar}-backend
+      sudo -u deploy pm2 save
+      return 0
+    fi
   fi
 
   echo "📂 Moviéndose a backend..."

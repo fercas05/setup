@@ -85,36 +85,45 @@ frontend_update() {
   sleep 2
 
   cd /home/deploy/${empresa_atualizar}
-  
+
   echo "🚫 Deteniendo PM2..."
   sudo -u deploy pm2 stop ${empresa_atualizar}-frontend
 
   echo "🧹 Restaurando archivos versionados en build si existen..."
   sudo -u deploy git restore --staged --worktree frontend/build || true
 
-  echo "🔄 Haciendo git pull..."
-  PULL_OUTPUT=$(sudo -u deploy git pull)
-  echo "$PULL_OUTPUT"
+  echo "🔄 Haciendo git fetch..."
+  sudo -u deploy git fetch origin
 
-  if echo "$PULL_OUTPUT" | grep -q "Already up to date."; then
-    echo "✅ No hay cambios para actualizar. Saliendo..."
-    sudo -u deploy pm2 start ${empresa_atualizar}-frontend
-    sudo -u deploy pm2 save
-    return 0
+  echo "🔍 Verificando cambios locales..."
+  if [ -n "$(sudo -u deploy git status --porcelain)" ]; then
+    echo "⚠️ Cambios locales detectados. Ejecutando reset forzado..."
+    sudo -u deploy git reset --hard origin/main
+  else
+    echo "✅ No hay cambios locales, continuando con git pull..."
+    PULL_OUTPUT=$(sudo -u deploy git pull)
+    echo "$PULL_OUTPUT"
+
+    if echo "$PULL_OUTPUT" | grep -q "Already up to date."; then
+      echo "✅ No hay cambios para actualizar. Saliendo..."
+      sudo -u deploy pm2 start ${empresa_atualizar}-frontend
+      sudo -u deploy pm2 save
+      return 0
+    fi
   fi
 
   echo "🚀 Instalando dependencias..."
   cd /home/deploy/${empresa_atualizar}/frontend
   sudo -u deploy npx update-browserslist-db@latest
-  
-  sudo -u deploy npm install --loglevel=error & 
+
+  sudo -u deploy npm install --loglevel=error &
   show_spinner $!
 
   echo "🧹 Limpiando build anterior..."
   sudo -u deploy rm -rf build
 
   echo "🏗️  Construyendo nueva versión..."
-  sudo -u deploy npm run build & 
+  sudo -u deploy npm run build &
   show_spinner $!
 
   echo "▶️ Iniciando PM2..."
@@ -123,7 +132,6 @@ frontend_update() {
 
   sleep 2
 }
-
 
 #######################################
 # Configura las variables de entorno del frontend
