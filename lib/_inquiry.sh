@@ -275,7 +275,6 @@ software_frontend_build(){
 
 software_fix_502(){
   get_instancia_add
-  get_frontend_port
   fix_502
 }
 
