@@ -688,28 +688,5 @@ fix_502(){
 
   sleep 2
 
-  # Extraer puerto de proxy_pass del archivo nginx
-  local frontend_port=$(grep "proxy_pass http://127.0.0.1:" /etc/nginx/sites-available/"$instancia_add"-frontend | sed -E 's/.*127\.0\.0\.1:([0-9]+).*/\1/')
 
-  # Mostrar mensaje con el puerto detectado
-  printf "\n${GREEN}✅ Puerto detectado automáticamente: ${frontend_port}${GRAY_LIGHT}\n"
-
-  sudo su - deploy << EOF
-  mkdir -p /home/deploy/$(echo "$instancia_add")/frontend
-  cat > /home/deploy/$(echo "$instancia_add")/frontend/server.js << EOL
-  const express = require("express");
-  const path = require("path");
-  const app = express();
-
-  app.use(express.static(path.join(__dirname, "build")));
-
-  app.get("/*", function (req, res) {
-    res.sendFile(path.join(__dirname, "build", "index.html"));
-  });
-
-  app.listen($frontend_port);
-  EOL
-  EOF
-
-  sleep 2
 }
