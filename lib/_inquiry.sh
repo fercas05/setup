@@ -273,6 +273,12 @@ software_frontend_build(){
   reboot
 }
 
+software_fix_502(){
+  get_instancia_add
+  get_frontend_port
+  fix_502
+}
+
 inquiry_options() {
   
   print_banner
@@ -290,6 +296,7 @@ inquiry_options() {
   printf "   [10] Fix - Rebuilder Front y Back\n"
   printf "   [11] Fix - Backend DB Migrate\n"
   printf "   [12] Fix - PM2 Services\n"
+  printf "   [13] Fix - 502 Bad Gateway\n"
   printf "\n"
   read -p "> " option
 
@@ -341,6 +348,10 @@ inquiry_options() {
       software_pm2_install
       exit
       ;;   
+    13) 
+      software_fix_502
+      exit
+      ;;  
     20) 
       software_backend_build
       exit

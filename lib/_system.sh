@@ -561,6 +561,32 @@ frontend_logs() {
   sleep 2
 }
 
+fix_502() {
+  print_banner
+  printf "${WHITE} 💻 FIX 502-Bad Gateway...${GRAY_LIGHT}"
+  printf "\n\n"
+
+  sleep 2
+
+  sudo su - deploy << EOF
+  mkdir -p /home/deploy/$(echo "$instancia_add")/frontend
+  cat > /home/deploy/$(echo "$instancia_add")/frontend/server.js << EOL
+  const express = require("express");
+  const path = require("path");
+  const app = express();
+
+  app.use(express.static(path.join(__dirname, "build")));
+
+  app.get("/*", function (req, res) {
+    res.sendFile(path.join(__dirname, "build", "index.html"));
+  });
+
+  app.listen($(echo "$frontend_port"));
+  EOL
+  EOF
+  sleep 2
+}
+
 backend_migrate() {
   print_banner
   printf "${WHITE} 💻 FIX MIGRACIONES...${GRAY_LIGHT}"
