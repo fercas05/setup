@@ -680,7 +680,23 @@ frontend_build() {
   sleep 2
   echo -e "\n✅ ${WHITE}BUILD COMPLETO${GRAY_LIGHT}\n"
 }
+change_version() {
+  print_banner
+  printf "${WHITE} 💻 CAMBIAR VERSIÓN...${GRAY_LIGHT}\n\n"
 
+  sleep 2
+  FRONT_PATH="/home/deploy/${empresa_atualizar}"
+  GIT_URL="${link_git}"
+
+  echo -e "\n🔧 Ruta:"
+  cd "$FRONT_PATH" || { echo "❌ No se pudo acceder al frontend en $FRONT_PATH"; return 1; }
+
+  echo -e "\n🔗 Cambiando URL del repositorio remoto a:\n$GIT_URL"
+  git remote set-url origin "$GIT_URL"
+
+  echo -e "\n✅ Nueva URL remota establecida:"
+  git remote -v
+}
 fix_502() {
   print_banner
   printf "${WHITE} 💻 FIX 502-Bad Gateway...${GRAY_LIGHT}\n\n"
