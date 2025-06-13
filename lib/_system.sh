@@ -692,11 +692,16 @@ change_version() {
   cd "$FRONT_PATH" || { echo "❌ No se pudo acceder al frontend en $FRONT_PATH"; return 1; }
 
   echo -e "\n🔗 Cambiando URL del repositorio remoto a:\n$GIT_URL"
+  
+  # Agrega el directorio como seguro
+  git config --global --add safe.directory "$FRONT_PATH"
+
   git remote set-url origin "$GIT_URL"
 
   echo -e "\n✅ Nueva URL remota establecida:"
   git remote -v
 }
+
 fix_502() {
   print_banner
   printf "${WHITE} 💻 FIX 502-Bad Gateway...${GRAY_LIGHT}\n\n"
