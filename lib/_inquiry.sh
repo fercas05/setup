@@ -203,6 +203,7 @@ software_update() {
   get_empresa_atualizar
   frontend_update
   backend_update
+  fix_502
   reboot
 }
 
@@ -274,8 +275,9 @@ software_frontend_build(){
 }
 
 software_fix_502(){
-  get_instancia_add
+  get_empresa_atualizar
   fix_502
+  reboot
 }
 
 inquiry_options() {

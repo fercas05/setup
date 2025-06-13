@@ -688,7 +688,7 @@ fix_502() {
   sleep 2
 
   # Extraer puerto del archivo NGINX
-  frontend_port=$(grep "proxy_pass http://127.0.0.1:" /etc/nginx/sites-available/"$instancia_add"-frontend | sed -E 's/.*127\.0\.0\.1:([0-9]+).*/\1/')
+  frontend_port=$(grep "proxy_pass http://127.0.0.1:" /etc/nginx/sites-available/"$empresa_atualizar"-frontend | sed -E 's/.*127\.0\.0\.1:([0-9]+).*/\1/')
 
   # Validar que se detectó un puerto
   if [[ -z "$frontend_port" ]]; then
@@ -699,8 +699,8 @@ fix_502() {
   printf "\n${GREEN}✅ Puerto detectado automáticamente: ${frontend_port}${GRAY_LIGHT}\n"
 
   sudo su - deploy <<EOF
-mkdir -p /home/deploy/${instancia_add}/frontend
-cat > /home/deploy/${instancia_add}/frontend/server.js <<'EOL'
+mkdir -p /home/deploy/${empresa_atualizar}/frontend
+cat > /home/deploy/${empresa_atualizar}/frontend/server.js <<'EOL'
 const express = require("express");
 const path = require("path");
 const app = express();
